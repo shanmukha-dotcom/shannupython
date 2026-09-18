@@ -454,6 +454,48 @@ def edit_employee(id):
 
     return redirect("/employee")
 
+# =========================================
+# SEARCH EMPLOYEE
+# =========================================
+
+@app.route("/search", methods=["GET", "POST"])
+def search_employee():
+
+    employees = []
+    search = ""
+
+    if request.method == "POST":
+
+        search = request.form.get("search", "")
+
+        connection = get_database_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM employees
+            WHERE name LIKE ?
+               OR email LIKE ?
+               OR phone LIKE ?
+               OR department LIKE ?
+            ORDER BY id DESC
+        """, (
+            "%" + search + "%",
+            "%" + search + "%",
+            "%" + search + "%",
+            "%" + search + "%"
+        ))
+
+        employees = cursor.fetchall()
+
+        connection.close()
+
+    return render_template(
+        "search.html",
+        employees=employees,
+        search=search
+    )
+
 
 # =========================================
 # START FLASK SERVER
