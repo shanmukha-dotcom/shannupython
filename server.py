@@ -1,13 +1,14 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session
 import sqlite3
 
 app = Flask(__name__, template_folder="templates")
+app.secret_key = "employee_management_secret"
 
 
 # =========================================
 # DATABASE CONNECTION
 # =========================================
- 
+
 def get_database_connection():
 
     connection = sqlite3.connect("users.db")
@@ -29,38 +30,24 @@ def create_database():
     # USERS TABLE
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-
             fullname TEXT NOT NULL,
-
             username TEXT UNIQUE NOT NULL,
-
             password TEXT NOT NULL
-
         )
     """)
 
     # EMPLOYEES TABLE
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS employees (
-
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-
             name TEXT NOT NULL,
-
             email TEXT NOT NULL,
-
             phone TEXT NOT NULL,
-
             department TEXT NOT NULL,
-
             salary INTEGER NOT NULL,
-
             joining_date TEXT NOT NULL,
-
             address TEXT
-
         )
     """)
 
@@ -71,11 +58,24 @@ def create_database():
 
 
 # =========================================
-# HOME PAGE
+# FIRST PAGE - LOGIN
 # =========================================
 
 @app.route("/")
 def home():
+
+    return redirect("/login")
+
+
+# =========================================
+# HOME PAGE AFTER LOGIN
+# =========================================
+
+@app.route("/home")
+def home_page():
+
+    if "username" not in session:
+        return redirect("/login")
 
     return render_template("navbar.html")
 
@@ -185,19 +185,10 @@ def login():
 
     if user:
 
-        return """
-        <h2>Login successful!</h2>
+        session["username"] = username
 
-        <p>
-            Welcome, """ + username + """!
-        </p>
-
-        <br>
-
-        <a href="/">
-            Go to Home
-        </a>
-        """
+        # LOGIN SUCCESS -> HOME PAGE
+        return redirect("/home")
 
     else:
 
@@ -217,11 +208,26 @@ def login():
 
 
 # =========================================
+# LOGOUT
+# =========================================
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
+
+
+# =========================================
 # ADD EMPLOYEE PAGE
 # =========================================
 
 @app.route("/add-employee", methods=["GET"])
 def add_employee_page():
+
+    if "username" not in session:
+        return redirect("/login")
 
     return render_template("add-employee.html")
 
@@ -232,6 +238,9 @@ def add_employee_page():
 
 @app.route("/add-employee", methods=["POST"])
 def add_employee():
+
+    if "username" not in session:
+        return redirect("/login")
 
     name = request.form.get("name")
     email = request.form.get("email")
@@ -317,6 +326,9 @@ def add_employee():
 @app.route("/employee")
 def employee():
 
+    if "username" not in session:
+        return redirect("/login")
+
     connection = get_database_connection()
 
     cursor = connection.cursor()
@@ -344,6 +356,9 @@ def employee():
 @app.route("/delete-employee/<int:id>")
 def delete_employee(id):
 
+    if "username" not in session:
+        return redirect("/login")
+
     connection = sqlite3.connect("users.db")
 
     cursor = connection.cursor()
@@ -367,6 +382,9 @@ def delete_employee(id):
 @app.route("/edit-employee/<int:id>")
 def edit_employee_page(id):
 
+    if "username" not in session:
+        return redirect("/login")
+
     connection = get_database_connection()
 
     cursor = connection.cursor()
@@ -388,7 +406,7 @@ def edit_employee_page(id):
 
         <br>
 
-        <a href="/employees">
+        <a href="/employee">
             Back to Employees
         </a>
         """
@@ -405,6 +423,9 @@ def edit_employee_page(id):
 
 @app.route("/edit-employee/<int:id>", methods=["POST"])
 def edit_employee(id):
+
+    if "username" not in session:
+        return redirect("/login")
 
     name = request.form["name"]
 
@@ -426,7 +447,6 @@ def edit_employee(id):
 
     cursor.execute("""
         UPDATE employees
-
         SET
             name = ?,
             email = ?,
@@ -435,7 +455,6 @@ def edit_employee(id):
             salary = ?,
             joining_date = ?,
             address = ?
-
         WHERE id = ?
     """, (
         name,
@@ -454,6 +473,7 @@ def edit_employee(id):
 
     return redirect("/employee")
 
+
 # =========================================
 # SEARCH EMPLOYEE
 # =========================================
@@ -461,7 +481,11 @@ def edit_employee(id):
 @app.route("/search", methods=["GET", "POST"])
 def search_employee():
 
+    if "username" not in session:
+        return redirect("/login")
+
     employees = []
+
     search = ""
 
     if request.method == "POST":
@@ -469,6 +493,7 @@ def search_employee():
         search = request.form.get("search", "")
 
         connection = get_database_connection()
+
         cursor = connection.cursor()
 
         cursor.execute("""
