@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +10,16 @@
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
         }
 
         body {
+            margin: 0;
+            font-family: Arial, sans-serif;
             background-color: #f5f5f5;
+            color: #222;
+            transition: 0.3s;
         }
 
-        /* Navbar */
         .navbar {
             background-color: #222;
             padding: 15px 30px;
@@ -36,112 +37,112 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
-            font-size: 16px;
         }
 
         .nav-links a:hover {
             color: #00bcd4;
         }
 
-        .login-btn {
+        .theme-btn {
+            padding: 9px 15px;
+            border-radius: 6px;
             border: 1px solid #00bcd4;
-            padding: 10px 18px;
-            border-radius: 5px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
         }
 
-        .register-btn {
-            background-color: #00bcd4;
-            padding: 10px 18px;
-            border-radius: 5px;
-        }
-
-        /* Search Container */
         .container {
             width: 90%;
-            max-width: 1000px;
-            margin: 50px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
         }
 
-        h1 {
+        h2 {
             text-align: center;
-            margin-bottom: 25px;
-            color: #222;
         }
 
         .search-box {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 30px;
+            margin: 25px 0;
         }
 
         .search-box input {
-            width: 70%;
-            padding: 13px;
+            width: 400px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
         }
 
         .search-box button {
-            padding: 13px 25px;
+            padding: 12px 20px;
             background-color: #00bcd4;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
         }
 
-        .search-box button:hover {
-            background-color: #0097a7;
-        }
-
-        /* Table */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: white;
         }
 
         th {
             background-color: #222;
             color: white;
             padding: 12px;
-            text-align: left;
         }
 
         td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .no-result {
+            padding: 10px;
+            border: 1px solid #ddd;
             text-align: center;
-            color: #777;
-            margin-top: 20px;
-            font-size: 17px;
+        }
+
+        /* DARK MODE */
+
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        body.dark-mode .navbar {
+            background-color: #000;
+        }
+
+        body.dark-mode .search-box input {
+            background-color: #333;
+            color: white;
+            border-color: #555;
+        }
+
+        body.dark-mode table {
+            background-color: #1e1e1e;
+            color: white;
+        }
+
+        body.dark-mode td {
+            border-color: #555;
+        }
+
+        body.dark-mode .theme-btn {
+            background-color: white;
+            color: black;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
 
         <div class="logo">
@@ -149,40 +150,40 @@
         </div>
 
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/employees">Employees</a>
-            <a href="/add_employee">Add Employee</a>
+
+            <a href="/home">Home</a>
+            <a href="/employee">Employees</a>
+            <a href="/add-employee">Add Employee</a>
             <a href="/search">Search</a>
-            <a href="/login" class="login-btn">Login</a>
-            <a href="/register" class="register-btn">Register</a>
+
+            <button class="theme-btn"
+                    id="themeButton"
+                    onclick="toggleTheme()">
+                🌙 Dark
+            </button>
+
         </div>
 
     </div>
 
-
-    <!-- Search -->
     <div class="container">
 
-        <h1>Search Employee</h1>
+        <h2>Search Employee</h2>
 
-        <form method="POST" action="/search" class="search-box">
+        <form method="POST"
+              action="/search"
+              class="search-box">
 
-            <input
-                type="text"
-                name="search"
-                placeholder="Search by name, email, phone or department"
-                value="{{ search }}"
-                required
-            >
+            <input type="text"
+                   name="search"
+                   placeholder="Search by name, email, phone or department"
+                   value="{{ request.form.get('search', '') }}">
 
             <button type="submit">
                 Search
             </button>
 
         </form>
-
-
-        {% if employees %}
 
         <table>
 
@@ -194,33 +195,65 @@
                 <th>Department</th>
                 <th>Salary</th>
                 <th>Joining Date</th>
+                <th>Address</th>
             </tr>
 
             {% for employee in employees %}
 
             <tr>
-                <td>{{ employee["id"] }}</td>
-                <td>{{ employee["name"] }}</td>
-                <td>{{ employee["email"] }}</td>
-                <td>{{ employee["phone"] }}</td>
-                <td>{{ employee["department"] }}</td>
-                <td>{{ employee["salary"] }}</td>
-                <td>{{ employee["joining_date"] }}</td>
+
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.phone }}</td>
+                <td>{{ employee.department }}</td>
+                <td>{{ employee.salary }}</td>
+                <td>{{ employee.joining_date }}</td>
+                <td>{{ employee.address }}</td>
+
             </tr>
 
             {% endfor %}
 
         </table>
 
-        {% elif search %}
-
-        <p class="no-result">
-            No employee found for "{{ search }}"
-        </p>
-
-        {% endif %}
-
     </div>
 
+    <script>
+
+        function updateThemeButton() {
+
+            const button =
+                document.getElementById("themeButton");
+
+            if (document.body.classList.contains("dark-mode")) {
+                button.innerHTML = "☀️ Light";
+            } else {
+                button.innerHTML = "🌙 Dark";
+            }
+        }
+
+        function toggleTheme() {
+
+            document.body.classList.toggle("dark-mode");
+
+            if (document.body.classList.contains("dark-mode")) {
+                localStorage.setItem("theme", "dark");
+            } else {
+                localStorage.setItem("theme", "light");
+            }
+
+            updateThemeButton();
+        }
+
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-mode");
+        }
+
+        updateThemeButton();
+
+    </script>
+
 </body>
+
 </html>

@@ -13,218 +13,278 @@
     <style>
 
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #222;
-            transition: 0.3s;
+
+            background-color: #ffffff;
+            color: #222222;
+
+            transition: background-color 0.3s,
+                        color 0.3s;
         }
 
-        /* ================= NAVBAR ================= */
+
+        /* =========================
+           NAVBAR
+        ========================= */
 
         .navbar {
-            background-color: #222;
+
+            background-color: #222222;
+
             padding: 15px 30px;
+
             display: flex;
             align-items: center;
-            transition: 0.3s;
         }
 
+
         .logo {
+
             color: white;
+
             font-size: 22px;
+
             font-weight: bold;
+
             margin-right: auto;
         }
 
+
         .nav-links {
+
             display: flex;
+
             align-items: center;
-            list-style: none;
-            gap: 20px;
+
+            gap: 18px;
         }
 
+
         .nav-links a {
+
             color: white;
+
             text-decoration: none;
+
             font-size: 16px;
         }
 
+
         .nav-links a:hover {
+
             color: #00bcd4;
         }
 
-        /* Login */
 
-        .login-btn {
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .nav-btn {
+
+            padding: 9px 15px;
+
+            border-radius: 6px;
+
             border: 1px solid #00bcd4;
-            padding: 8px 15px;
-            border-radius: 5px;
+
+            background-color: transparent;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 14px;
         }
 
-        .login-btn:hover {
-            background-color: #00bcd4;
-            color: white !important;
-        }
-
-        /* Register */
 
         .register-btn {
+
             background-color: #00bcd4;
-            padding: 8px 15px;
-            border-radius: 5px;
+
+            color: white;
         }
 
-        .register-btn:hover {
-            background-color: #0097a7;
-            color: white !important;
-        }
-
-        /* ================= THEME BUTTON ================= */
 
         .theme-btn {
+
+            padding: 9px 15px;
+
+            border-radius: 6px;
+
             border: 1px solid #00bcd4;
+
             background-color: transparent;
+
             color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
+
             cursor: pointer;
-            font-size: 15px;
+
+            font-size: 14px;
         }
+
 
         .theme-btn:hover {
-            background-color: #00bcd4;
-            color: white;
+
+            opacity: 0.85;
         }
 
-        /* ================= CONTENT ================= */
 
-        .content {
-            padding: 80px 20px;
+        /* =========================
+           HOME CONTENT
+        ========================= */
+
+        .home-content {
+
             text-align: center;
-            transition: 0.3s;
+
+            padding: 80px 20px;
         }
 
-        .content h1 {
-            color: #222;
-            margin-bottom: 20px;
-            transition: 0.3s;
+
+        .home-content h1 {
+
+            font-size: 36px;
+
+            margin-bottom: 15px;
         }
 
-        .content p {
-            color: #555;
+
+        .home-content p {
+
             font-size: 18px;
-            transition: 0.3s;
         }
 
-        /* ================= DARK MODE ================= */
+
+        /* =========================
+           DARK MODE
+        ========================= */
 
         body.dark-mode {
+
             background-color: #121212;
+
             color: white;
         }
+
 
         body.dark-mode .navbar {
-            background-color: #000;
+
+            background-color: #000000;
         }
 
-        body.dark-mode .content h1 {
+
+        body.dark-mode .theme-btn {
+
+            background-color: white;
+
+            color: black;
+        }
+
+
+        body.dark-mode .home-content {
+
             color: white;
-        }
-
-        body.dark-mode .content p {
-            color: #ccc;
         }
 
     </style>
 
 </head>
 
+
 <body>
 
 
-    <!-- ================= NAVBAR ================= -->
+    <!-- =========================
+         NAVBAR
+    ========================= -->
 
-    <nav class="navbar">
+    <div class="navbar">
+
 
         <div class="logo">
+
             Employee Management System
+
         </div>
 
 
-        <ul class="nav-links">
-
-            <li>
-                <a href="/">
-                    Home
-                </a>
-            </li>
+        <div class="nav-links">
 
 
-            <li>
-                <a href="/employee">
-                    Employees
-                </a>
-            </li>
+            <a href="/home">
+                Home
+            </a>
 
 
-            <li>
-                <a href="/add-employee">
-                    Add Employee
-                </a>
-            </li>
+            <a href="/employee">
+                Employees
+            </a>
 
 
-            <li>
-                <a href="/search">
-                    Search
-                </a>
-            </li>
+            <a href="/add-employee">
+                Add Employee
+            </a>
 
 
-            <li>
-                <a href="/login"
-                   class="login-btn">
+            <a href="/search">
+                Search
+            </a>
+
+
+            <a href="/login">
+
+                <button class="nav-btn">
                     Login
-                </a>
-            </li>
+                </button>
+
+            </a>
 
 
-            <li>
-                <a href="/register"
-                   class="register-btn">
+            <a href="/register">
+
+                <button
+                    class="nav-btn register-btn">
+
                     Register
-                </a>
-            </li>
+
+                </button>
+
+            </a>
 
 
             <!-- THEME BUTTON -->
 
-            <li>
-                <button class="theme-btn"
-                        id="themeToggle"
-                        onclick="toggleTheme()">
-                    🌙 Dark
-                </button>
-            </li>
+            <button
+                class="theme-btn"
+                id="themeButton"
+                onclick="toggleTheme()">
 
-        </ul>
+                🌙 Dark
 
-    </nav>
+            </button>
 
 
-    <!-- ================= HOME ================= -->
+        </div>
 
-    <div class="content">
+    </div>
+
+
+    <!-- =========================
+         HOME PAGE
+    ========================= -->
+
+    <div class="home-content">
 
         <h1>
             Welcome to Employee Management System
         </h1>
+
 
         <p>
             Manage your employees easily.
@@ -233,53 +293,98 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- =========================
+         THEME JAVASCRIPT
+    ========================= -->
 
     <script>
 
-        function toggleTheme() {
 
-            document.body.classList.toggle("dark-mode");
+        function updateThemeButton() {
 
             const button =
-                document.getElementById("themeToggle");
+                document.getElementById("themeButton");
 
-            if (document.body.classList.contains("dark-mode")) {
+
+            if (
+                document.body.classList.contains(
+                    "dark-mode"
+                )
+            ) {
 
                 button.innerHTML = "☀️ Light";
-
-                localStorage.setItem("theme", "dark");
 
             } else {
 
                 button.innerHTML = "🌙 Dark";
-
-                localStorage.setItem("theme", "light");
 
             }
 
         }
 
 
-        /* Remember selected theme */
+        function toggleTheme() {
 
-        window.onload = function () {
 
-            const savedTheme =
-                localStorage.getItem("theme");
+            if (
+                document.body.classList.contains(
+                    "dark-mode"
+                )
+            ) {
 
-            const button =
-                document.getElementById("themeToggle");
 
-            if (savedTheme === "dark") {
+                document.body.classList.remove(
+                    "dark-mode"
+                );
 
-                document.body.classList.add("dark-mode");
 
-                button.innerHTML = "☀️ Light";
+                localStorage.setItem(
+                    "theme",
+                    "light"
+                );
+
+
+            } else {
+
+
+                document.body.classList.add(
+                    "dark-mode"
+                );
+
+
+                localStorage.setItem(
+                    "theme",
+                    "dark"
+                );
 
             }
 
-        };
+
+            updateThemeButton();
+
+        }
+
+
+        /* =========================
+           SAVED THEME
+        ========================= */
+
+
+        const savedTheme =
+            localStorage.getItem("theme");
+
+
+        if (savedTheme === "dark") {
+
+            document.body.classList.add(
+                "dark-mode"
+            );
+
+        }
+
+
+        updateThemeButton();
+
 
     </script>
 
@@ -287,6 +392,3 @@
 </body>
 
 </html>
-  
-
-
