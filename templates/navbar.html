@@ -136,6 +136,36 @@
 
 
         /* =========================
+           LOGOUT BUTTON
+        ========================= */
+
+        .logout-btn {
+
+            padding: 9px 15px;
+
+            border-radius: 6px;
+
+            border: 1px solid #ff5252;
+
+            background-color: #ff5252;
+
+            color: white !important;
+
+            text-decoration: none;
+
+            font-size: 14px !important;
+        }
+
+
+        .logout-btn:hover {
+
+            background-color: #e53935;
+
+            color: white !important;
+        }
+
+
+        /* =========================
            HOME CONTENT
         ========================= */
 
@@ -237,25 +267,46 @@
             </a>
 
 
-            <a href="/login">
+            <!-- =========================
+                 LOGIN / REGISTER / LOGOUT
+            ========================= -->
 
-                <button class="nav-btn">
-                    Login
-                </button>
+            {% if "username" in session %}
 
-            </a>
+                <!-- USER LOGGED IN -->
+
+                <a href="/logout"
+                   class="logout-btn">
+
+                    Logout
+
+                </a>
+
+            {% else %}
+
+                <!-- USER NOT LOGGED IN -->
+
+                <a href="/login">
+
+                    <button class="nav-btn">
+                        Login
+                    </button>
+
+                </a>
 
 
-            <a href="/register">
+                <a href="/register">
 
-                <button
-                    class="nav-btn register-btn">
+                    <button
+                        class="nav-btn register-btn">
 
-                    Register
+                        Register
 
-                </button>
+                    </button>
 
-            </a>
+                </a>
+
+            {% endif %}
 
 
             <!-- THEME BUTTON -->
